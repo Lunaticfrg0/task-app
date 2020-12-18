@@ -1,4 +1,4 @@
-const { connect } = require('mongodb');
+const validator = require('validator')
 const mongoose = require('mongoose');
 
 mongoose.connect("mongodb://127.0.0.1:27017/task-manager-api",{
@@ -8,16 +8,48 @@ mongoose.connect("mongodb://127.0.0.1:27017/task-manager-api",{
 
 const User = mongoose.model('User', {
     name: {
-        type: String
+        type: String,
+        required: true,
+        trim: true
+    },
+    email:{
+        type: String,
+        required : true,
+        trim: true,
+        lowercase: true,
+        validate(value){
+            if(!validator.isEmail(value)){
+                throw new Error("Email is invalid")
+            }
+        }
     },
     age:{
-        type: Number
+        type: Number,
+        default: 18,
+        validate(value){
+            if(value < 0){
+                throw new Error("Age must be a positive number")
+            }
+        }
+    },
+    password:{
+        type: String,
+        required: true,
+        trim: true,
+        minlength: 7,
+        validate(value){
+            if(value.toLowerCase().includes('password')){
+                throw new Error("Your password cannot contain the word password")
+            }
+        }
+
     }
 })
-const me = new User({
-    name: "Katherine",
-    age: 18
-})
+// const me = new User({
+//     name: "   Katia Perdomo",
+//     email: "whOOOponj@gmail.com",
+//     password: "Kocodrillo Durmiente"
+// })
 
 // me.save().then(() =>{
 //     console.log(me)
@@ -27,16 +59,19 @@ const me = new User({
 
 const Task = mongoose.model('Task', {
     description:{
-        type: String
+        type: String,
+        required: true,
+        trim: true
     },
     completed:{
-        type: Boolean
+        type: Boolean,
+        default: false
     }
 })
 
 const task01 = new Task({
-    description: "Clean the dishes",
-    completed: false
+    description: "Paint the room",
+    
 })
 task01.save().then(()=>{
     console.log(task01)
