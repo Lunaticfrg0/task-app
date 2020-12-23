@@ -1,4 +1,5 @@
-const express = require('express')
+const express = require('express');
+const { updateMany, update } = require('../models/user');
 const router = new express.Router();
 const User = require("../models/user")
 
@@ -40,7 +41,13 @@ router.patch('/users/:id', async (req, res)=>{
         return res.status(404).send({error: 'Invalid Update'})
     }
     try{
-        const user = await User.findByIdAndUpdate(req.params.id, req.body, {new: true, runValidators: true})
+        const user = await User.findById(req.params.id)
+        updates.forEach((update) =>{
+            user[update] = req.body[update]
+        })
+        
+        await user.save()
+
         if(!user){
             return res.status(404).send()
         }
