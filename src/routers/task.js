@@ -13,7 +13,6 @@ router.post('/tasks', async (req, res) =>{
 })
 
 router.get('/tasks', async (req, res)=>{
-
     try{
         const tasks = await Task.find({})
         res.send(tasks)
