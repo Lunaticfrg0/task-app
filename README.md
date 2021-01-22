@@ -4,8 +4,11 @@
 ---
 # Enpoints
   ### GET
+  ---
   ### POST
+  ---
   ### PATCH
+  ---
   ### DELETE
 ---
 
